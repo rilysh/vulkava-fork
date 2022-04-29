@@ -278,7 +278,7 @@ export type PlayerOptions = {
   /** The guild id that player belongs to */
   guildId: string;
   /** The voice channel id */
-  voiceChannelId: string;
+  voiceChannelId?: string | null;
   /** The text channel id */
   textChannelId?: string;
   /** Whether the bot joins the voice channel deafened or not */
