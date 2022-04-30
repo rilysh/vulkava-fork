@@ -373,3 +373,21 @@ export type FilterOptions = {
   [key: string]: unknown;
 }
 // ---------- End of Filter typings ----------
+
+export interface PlayerEventTypes {
+    raw: [node: Node, payload: unknown];
+    nodeConnect: [node: Node];
+    nodeResume: [node: Node];
+    nodeDisconnect: [node: Node];
+    warn: [node: Node, warn: string];
+    error: [node: Node, error: Error];
+    trackStart: [player: Player, track: Track];
+    trackEnd: [player: Player, track: Track, reason: TrackEndReason];
+    trackStuck: [player: Player, track: Track, thresholdMs: number];
+    trackException: [player: Player, track: Track, exception: LoadException & {
+        cause: string;
+    }]
+    wsDisconnect: [player: Player, code: number, reason: string];
+    queueEnd: [player: Player];
+    pong: [node: Node, ping?: number];
+}
