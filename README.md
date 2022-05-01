@@ -1,4 +1,7 @@
 # Vulkava
+
+(A fork version of vulkava with little fixes, **support or pull requests** will not be granted)
+
 A lavalink wrapper in Node.JS
 
 - [Documentation](https://vulkava.js.org)
