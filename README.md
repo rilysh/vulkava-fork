@@ -1,6 +1,6 @@
 # Vulkava
 
-(A fork version of vulkava with little fixes, **support or pull requests** will not be granted)
+(A forked version of vulkava with little changes and fixes, **support or pull requests** will not be granted for this fork)
 
 A lavalink wrapper in Node.JS
 
