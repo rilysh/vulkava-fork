@@ -39,7 +39,7 @@ export default class Player {
 
   declare private connectTimeout?: NodeJS.Timeout;
 
-  public voiceChannelId: string;
+  public voiceChannelId?: string | null;
   public textChannelId?: string | null;
 
   public selfDeaf?: boolean;
@@ -90,7 +90,7 @@ export default class Player {
 
     this.filters = new Filters(this);
 
-    this.voiceChannelId = options.voiceChannelId;
+    this.voiceChannelId = options.voiceChannelId ?? null;
     this.textChannelId = options.textChannelId ?? null;
 
     this.selfDeaf = options.selfDeaf ?? false;
