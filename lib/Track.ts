@@ -2,7 +2,7 @@ import { ITrack } from './@types';
 
 export default class Track {
   public readonly identifier: string;
-  declare private readonly thumbnailUrl?: string;
+  declare private readonly thumbnailUrl: string | undefined;
   public readonly isSeekable: boolean;
   public readonly author: string;
   public readonly duration: number;
@@ -18,7 +18,7 @@ export default class Track {
 
   constructor(data: ITrack) {
     this.identifier = data.info.identifier;
-    if (data.info.thumbnail) this.thumbnailUrl = data.info.thumbnail;
+    this.thumbnailUrl = data.info.thumbnail ?? undefined;
     this.isSeekable = data.info.isSeekable;
     this.author = data.info.author;
     this.duration = data.info.length;
