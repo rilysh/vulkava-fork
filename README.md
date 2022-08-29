@@ -1,22 +1,18 @@
-# Vulkava
+# Vulkava-fork
 
-(A forked version of vulkava with little changes and fixes, **support or pull requests** will not be granted for this fork)
+This is a forked version Vulkava with some patches, for support DM me on Discord, at: Konaya#4220
 
-A lavalink wrapper in Node.JS
-
-- [Documentation](https://vulkava.js.org)
+- [Original Documentation](https://vulkava.js.org)
 - [Common errors/Issues](https://vulkava.js.org/common-issues)
 
 ## 🔌 Installation
 You will need NodeJS v14+ and a running lavalink server.
 - [Official Lavalink](https://github.com/freyacodes/Lavalink)
-- [My custom version](https://github.com/davidffa/lavalink/releases)
-```console
-$ npm i vulkava
-$ yarn add vulkava
-$ pnpm add vulkava
+- [Davidffa's custom lavalink](https://github.com/davidffa/lavalink/releases)
+```sh
+git clone https://github.com/rilysh/vulkava-fork.git
+cd vulkava-fork && tsc
 ```
-
 ## Getting started
 - See how to setup a lavalink server [here](https://github.com/freyacodes/Lavalink#readme)
 - See example usage [here](https://github.com/davidffa/Vulkava/tree/main/examples/ExampleBot.md)
