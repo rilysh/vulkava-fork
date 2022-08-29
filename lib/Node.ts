@@ -160,7 +160,7 @@ export default class Node {
     const headers = {
       Authorization: this.options.password,
       'User-Id': this.vulkava.clientId,
-      'Client-Name': `Vulkava/${VERSION}`
+      'Client-Name': `Vulkava-fork/${VERSION}`
     };
 
     if (this.options.resumeKey) Object.assign(headers, { 'Resume-Key': this.options.resumeKey });
@@ -461,8 +461,8 @@ export default class Node {
           }
         }
       }
-    } catch (_) {
-      // no available nodes, so we can't move the players
+    } catch {
+      throw new RangeError('No available nodes to move the player');
     }
 
     this.vulkava.emit('error', this, new Error(`WebSocket closed abnormally with code ${code}.`));
@@ -487,7 +487,7 @@ export default class Node {
   }
 
   // REST
-  public request<T>(method: Dispatcher.HttpMethod, endpoint: string, body?: Record<string, unknown> | Array<unknown>): Promise<T> {
+  public async request<T>(method: Dispatcher.HttpMethod, endpoint: string, body?: Record<string, unknown> | Array<unknown>): Promise<T> {
     return this.pool.request({
       path: `/${endpoint}`,
       method,

@@ -22,6 +22,7 @@ import type {
   PlaylistInfo
 } from './@types';
 import AppleMusic from './sources/AppleMusic';
+import Cache from './Cache';
 
 export interface Vulkava {
   once: EventListeners<this>;
@@ -38,6 +39,7 @@ export interface Vulkava {
 export class Vulkava extends EventEmitter {
   public clientId: string;
   public nodes: Node[];
+  public cache: Cache<{ q: string, v: LoadTracksResult }>;
   private readonly defaultSearchSource: SEARCH_SOURCE;
   public readonly unresolvedSearchSource: SEARCH_SOURCE;
   declare private readonly appleMusic?: AppleMusic;
@@ -137,7 +139,7 @@ export class Vulkava extends EventEmitter {
   }
 
   public get bestNode(): Node {
-    if (Date.now() < this.lastNodeSorting + 30000) {
+    if (Date.now() < (this.lastNodeSorting + 30000)) {
       if (this.nodes[0].state === NodeState.CONNECTED) {
         return this.nodes[0];
       }
@@ -391,14 +393,28 @@ export class Vulkava extends EventEmitter {
       query = `${sourceMap[source] || 'ytsearch:'}${query}`;
     }
 
-    const res = await node.request<LoadTracksResult>('GET', `loadtracks?identifier=${encodeURIComponent(query)}`);
+    let res: LoadTracksResult | undefined;
+    if (this.cache.each.length === 0) {
+      res = await node.request<LoadTracksResult>('GET', `loadtracks?identifier=${encodeURIComponent(query)}`);
+      this.cache.add({ q: query, v: res });
+    } else {
+      this.cache.each.map((x) => {
+        if (x.q === query) {
+          res = x.v;
+        }
+      });
+      if (!res) {
+        res = await node.request<LoadTracksResult>('GET', `loadtracks?identifier=${encodeURIComponent(query)}`);
+        this.cache.add({ q: query, v: res });
+      }
+    }
 
-    if (res.loadType === 'LOAD_FAILED' || res.loadType === 'NO_MATCHES') {
+    if (res.loadType === 'LOAD_FAILED' || res?.loadType === 'NO_MATCHES') {
       return res as unknown as SearchResult;
     } else {
-      const tracks = res.tracks.map(t => new Track(t));
+      const tracks = res?.tracks.map((t: ITrack) => new Track(t));
       if (res.loadType === 'PLAYLIST_LOADED') {
-        res.playlistInfo.duration = tracks.reduce((acc, cur) => acc + cur.duration, 0);
+        res.playlistInfo.duration = tracks.reduce((acc: number, cur: { duration: number }) => acc + cur.duration, 0);
       }
 
       return {
@@ -422,6 +438,7 @@ export class Vulkava extends EventEmitter {
     for (const node of this.nodes) {
       node.connect();
     }
+    this.cache = new Cache();
   }
 
   /**
@@ -444,6 +461,10 @@ export class Vulkava extends EventEmitter {
 
       if (packet.d.channel_id) {
         player.voiceChannelId = packet.d.channel_id;
+      }
+
+      if (player.voiceState.event) {
+        player.sendVoiceUpdate();
       }
     } else if (payload.t === 'VOICE_SERVER_UPDATE') {
       const packet = payload as VoiceServerUpdatePayload;
@@ -484,7 +505,9 @@ export class Vulkava extends EventEmitter {
         }
       }
 
-      player.sendVoiceUpdate();
+      if (player.voiceState.sessionId) {
+        player.sendVoiceUpdate();
+      }
     }
   }
 }

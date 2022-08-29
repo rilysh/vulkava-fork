@@ -49,7 +49,7 @@ export default class Filters {
     if (options === undefined) throw new TypeError('ChannelMixOptions must not be empty!');
     if (typeof options !== 'object' || Array.isArray(options)) throw new TypeError('ChannelMixOptions must be an object.');
 
-    options === null ? delete this.options.channelMix : this.options.channelMix = options;
+    !options ? delete this.options.channelMix : this.options.channelMix = options;
     if (apply) this.apply();
     return this;
   }
@@ -72,7 +72,7 @@ export default class Filters {
     if (options === undefined) throw new TypeError('DistortionOptions must not be empty!');
     if (typeof options !== 'object' || Array.isArray(options)) throw new TypeError('DistortionOptions must be an object.');
 
-    options === null ? delete this.options.distortion : this.options.distortion = options;
+    !options ? delete this.options.distortion : this.options.distortion = options;
     if (apply) this.apply();
     return this;
   }
@@ -85,7 +85,7 @@ export default class Filters {
    */
   public setEqualizer(options: number[] | null, apply = true): this {
     if (options === undefined) throw new TypeError('Equalizer must not be empty!');
-    if (options === null) {
+    if (!options) {
       delete this.options.equalizer;
       if (apply) this.apply();
       return this;
@@ -113,7 +113,7 @@ export default class Filters {
     if (options === undefined) throw new TypeError('KaraokeOptions must not be empty!');
     if (typeof options !== 'object' || Array.isArray(options)) throw new TypeError('KaraokeOptions must be an object.');
 
-    options === null ? delete this.options.karaoke : this.options.karaoke = options;
+    !options ? delete this.options.karaoke : this.options.karaoke = options;
     if (apply) this.apply();
     return this;
   }
@@ -129,7 +129,7 @@ export default class Filters {
     if (options === undefined) throw new TypeError('LowPassOptions must not be empty!');
     if (typeof options !== 'object' || Array.isArray(options)) throw new TypeError('LowPassOptions must be an object.');
 
-    options === null ? delete this.options.lowPass : this.options.lowPass = options;
+    !options ? delete this.options.lowPass : this.options.lowPass = options;
     if (apply) this.apply();
     return this;
   }
@@ -145,7 +145,7 @@ export default class Filters {
     if (options === undefined) throw new TypeError('RotationOptions must not be empty!');
     if (typeof options !== 'object' || Array.isArray(options)) throw new TypeError('RotationOptions must be an object.');
 
-    options === null ? delete this.options.rotation : this.options.rotation = options;
+    !options ? delete this.options.rotation : this.options.rotation = options;
     if (apply) this.apply();
     return this;
   }
@@ -163,7 +163,7 @@ export default class Filters {
     if (options === undefined) throw new TypeError('TimescaleOptions must not be empty!');
     if (typeof options !== 'object' || Array.isArray(options)) throw new TypeError('TimescaleOptions must be an object.');
 
-    options === null ? delete this.options.timescale : this.options.timescale = options;
+    !options ? delete this.options.timescale : this.options.timescale = options;
     if (apply) this.apply();
     return this;
   }
@@ -180,7 +180,7 @@ export default class Filters {
     if (options === undefined) throw new TypeError('TremoloOptions must not be empty!');
     if (typeof options !== 'object' || Array.isArray(options)) throw new TypeError('TremoloOptions must be an object.');
 
-    options === null ? delete this.options.tremolo : this.options.tremolo = options;
+    !options ? delete this.options.tremolo : this.options.tremolo = options;
     if (apply) this.apply();
     return this;
   }
@@ -197,7 +197,7 @@ export default class Filters {
     if (options === undefined) throw new TypeError('VibratoOptions must not be empty!');
     if (typeof options !== 'object' || Array.isArray(options)) throw new TypeError('VibratoOptions must be an object.');
 
-    options === null ? delete this.options.vibrato : this.options.vibrato = options;
+    !options ? delete this.options.vibrato : this.options.vibrato = options;
     if (apply) this.apply();
     return this;
   }
@@ -252,7 +252,11 @@ export default class Filters {
 
     Object.assign(payload, this.options);
 
-    if (this.options.equalizer) { Object.assign(payload, { equalizer: this.options.equalizer.map((gain, band) => ({ band, gain })) }); }
+    if (this.options.equalizer) {
+      Object.assign(payload, {
+        equalizer: this.options.equalizer.map((gain, band) => ({ band, gain }))
+      });
+    }
 
     this.player.node?.send(payload);
   }
